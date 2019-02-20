@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RailWayVideo</string>
+
+    <string name="title_activity_wellcom">WellcomActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="type">类型：%s</string>
+    <string name="descripte">简介：%s</string>
+    <string name="other_rem">其他推荐</string>
+    <string name="download">点击下载</string>
+
+    <string name="index">首页</string>
+    <string name="subtype">类别</string>
+    <string name="search">搜索</string>
+    <string name="setting">设定</string>
+</resources>

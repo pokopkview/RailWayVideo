@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp">
+        <EditText
+            android:id="@+id/et_input"
+            android:layout_marginRight="90dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:imeOptions="actionSearch"
+            android:drawableLeft="@mipmap/search_small"
+            android:textCursorDrawable="@color/nagative_blue"
+            android:theme="@style/MyEditText" />
+
+        <Button
+            android:id="@+id/bt_search_confrim"
+            android:layout_width="54dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_btn_simple"
+            android:text="搜索"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/rl_search"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

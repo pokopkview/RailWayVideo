@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="54dp">
+
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_subtype_icon"
+            android:src="@mipmap/subtype"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+
+        <TextView
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:includeFontPadding="false"
+            android:layout_toRightOf="@id/iv_subtype_icon"
+            android:textStyle="bold"
+            android:textColor="@color/nagative_blue"
+            android:text="@string/subtype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_alignParentBottom="true"
+            android:background="@color/nagative_blue"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </RelativeLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_subtype"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
