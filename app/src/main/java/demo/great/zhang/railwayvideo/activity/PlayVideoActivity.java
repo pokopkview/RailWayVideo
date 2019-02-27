@@ -39,6 +39,7 @@ import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
 import demo.great.zhang.railwayvideo.adapter.RecommendAdapter;
 import demo.great.zhang.railwayvideo.base.BaseActivity;
 import demo.great.zhang.railwayvideo.entity.DetailMovie;
+import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.net.URLConst;
 import demo.great.zhang.railwayvideo.viewmodel.GenresViewModel;
@@ -137,10 +138,10 @@ public class PlayVideoActivity extends BaseActivity {
         gen = gen.substring(1, gen.length() - 1);
         defultgen = gen.split(",")[0];
         GenresViewModel genresViewModel = ViewModelProviders.of(this).get(GenresViewModel.class);
-        genresViewModel.getGenresMovie(defultgen).observe(this, new Observer<List<SimpleMovie>>() {
+        genresViewModel.getGenresMovie(defultgen).observe(this, new Observer<ListObject<SimpleMovie>>() {
             @Override
-            public void onChanged(List<SimpleMovie> simpleMovies) {
-                initRecommend(simpleMovies);
+            public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+                initRecommend(simpleMovies.getList());
             }
         });
         tvType.setText(String.format(getResources().getString(R.string.type), gen));

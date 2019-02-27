@@ -36,7 +36,6 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
-
     private FragmentIndex fragmentIndex;
     private FragmentSubtype fragmentSubtype;
     private FragmentSearch fragmentSearch;
@@ -67,6 +66,8 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onPermissionDenied() {
+                        showMsg("无权限，应用将无法使用");
+                        finish();
                     }
                 });
         navigation.setItemIconTintList(null);
@@ -79,11 +80,11 @@ public class MainActivity extends BaseActivity {
             ssidList.add(scanResult.SSID);
         }
 
-//        if(!ssidList.contains(Consts.STATICSSID)){
-//            dismissProgress();
-//            showNormalDialog(this,"请在对应Wi-Fi区域内使用！");
-//            return;
-//        }
+        if(!ssidList.contains(Consts.STATICSSID)){
+            dismissProgress();
+            showNormalDialog(this,"请在对应Wi-Fi区域内使用！");
+            return;
+        }
         wifiUtils.openWifi();
         boolean isConnect = wifiUtils.connectWifi(Consts.STATICSSID, Consts.STATICPWD);
         System.out.println(isConnect);

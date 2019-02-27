@@ -8,15 +8,16 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.net.URLConst;
 
 public class SearchByTitleViewMode extends AbsViewModel {
 
-    MutableLiveData<List<SimpleMovie>> mutableLiveData;
+    MutableLiveData<ListObject<SimpleMovie>> mutableLiveData;
 
 
-    public LiveData<List<SimpleMovie>> getSearchResult(){
+    public LiveData<ListObject<SimpleMovie>> getSearchResult(){
         if(mutableLiveData == null){
             mutableLiveData = new MutableLiveData<>();
         }
@@ -31,8 +32,8 @@ public class SearchByTitleViewMode extends AbsViewModel {
 
     @Override
     protected void getCallBack(String response) {
-        Type type = new TypeToken<List<SimpleMovie>>(){}.getType();
-        List<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
+        Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
+        ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);
     }
 }

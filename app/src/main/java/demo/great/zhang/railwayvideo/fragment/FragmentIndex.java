@@ -30,6 +30,7 @@ import demo.great.zhang.railwayvideo.activity.PlayVideoActivity;
 import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
 import demo.great.zhang.railwayvideo.adapter.RecommendAdapter;
 import demo.great.zhang.railwayvideo.base.BaseFragment;
+import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.viewmodel.HotViewModel;
 import demo.great.zhang.railwayvideo.viewmodel.RecommendViewModel;
@@ -89,18 +90,18 @@ public class FragmentIndex extends BaseFragment {
             }
             getAppActivity().dismissProgress();
             HotViewModel hotViewModel = ViewModelProviders.of(this).get(HotViewModel.class);
-            hotViewModel.getHotResource().observe(this, new Observer<List<SimpleMovie>>() {
+            hotViewModel.getHotResource().observe(this, new Observer<ListObject<SimpleMovie>>() {
                 @Override
-                public void onChanged(List<SimpleMovie> simpleMovies) {
-                    initBanner(simpleMovies);
-                    initRecycle(simpleMovies);
+                public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+                    initBanner(simpleMovies.getList());
+                    initRecycle(simpleMovies.getList());
                 }
             });
 
             RecommendViewModel recommendViewModel = ViewModelProviders.of(this).get(RecommendViewModel.class);
-            recommendViewModel.getRecommend().observe(this, new Observer<List<SimpleMovie>>() {
+            recommendViewModel.getRecommend().observe(this, new Observer<ListObject<SimpleMovie>>() {
                 @Override
-                public void onChanged(List<SimpleMovie> simpleMovies) {
+                public void onChanged(ListObject<SimpleMovie> simpleMovies) {
 
                 }
             });

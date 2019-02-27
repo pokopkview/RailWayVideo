@@ -20,6 +20,7 @@ import demo.great.zhang.railwayvideo.R;
 import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
 import demo.great.zhang.railwayvideo.adapter.RecommendAdapter;
 import demo.great.zhang.railwayvideo.base.BaseActivity;
+import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.viewmodel.GenresViewModel;
 
@@ -48,11 +49,11 @@ public class SubTypeActivity extends BaseActivity {
     protected void initEvent() {
         String name = getIntent().getStringExtra("sub_name");
         GenresViewModel genresViewModel = ViewModelProviders.of(this).get(GenresViewModel.class);
-        genresViewModel.getGenresMovie(name).observe(this, new Observer<List<SimpleMovie>>() {
+        genresViewModel.getGenresMovie(name).observe(this, new Observer<ListObject<SimpleMovie>>() {
             @Override
-            public void onChanged(List<SimpleMovie> simpleMovies) {
-                if (!simpleMovies.isEmpty()) {
-                    initRec(simpleMovies);
+            public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+                if (!simpleMovies.getList().isEmpty()) {
+                    initRec(simpleMovies.getList());
                 } else {
                     tvEmpty.setVisibility(View.VISIBLE);
                     rvSimpleMovie.setVisibility(View.GONE);

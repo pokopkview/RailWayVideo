@@ -20,6 +20,7 @@ import demo.great.zhang.railwayvideo.activity.PlayVideoActivity;
 import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
 import demo.great.zhang.railwayvideo.adapter.RecommendAdapter;
 import demo.great.zhang.railwayvideo.base.BaseFragment;
+import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.viewmodel.SearchByTitleViewMode;
 
@@ -75,10 +76,10 @@ public class FragmentSearch extends BaseFragment {
 
 
 
-    private Observer<List<SimpleMovie>> observer = new Observer<List<SimpleMovie>>() {
+    private Observer<ListObject<SimpleMovie>> observer = new Observer<ListObject<SimpleMovie>>() {
         @Override
-        public void onChanged(List<SimpleMovie> simpleMovies) {
-            RecommendAdapter adapter = new RecommendAdapter(getAppActivity(), simpleMovies);
+        public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+            RecommendAdapter adapter = new RecommendAdapter(getAppActivity(), simpleMovies.getList());
             rlSearch.setLayoutManager(new GridLayoutManager(getAppActivity(), 3));
             rlSearch.setAdapter(adapter);
             adapter.setCliclListener(itemClickListener);

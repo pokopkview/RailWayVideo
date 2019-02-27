@@ -8,15 +8,16 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.net.URLConst;
 
 public class HotViewModel extends AbsViewModel {
 
-    private MutableLiveData<List<SimpleMovie>> mutableLiveData;
+    private MutableLiveData<ListObject<SimpleMovie>> mutableLiveData;
 
 
-    public LiveData<List<SimpleMovie>> getHotResource(){
+    public LiveData<ListObject<SimpleMovie>> getHotResource(){
         if(mutableLiveData==null){
             mutableLiveData = new MutableLiveData<>();
             HttpGet(URLConst.GETHOT,value);
@@ -29,8 +30,8 @@ public class HotViewModel extends AbsViewModel {
 
     @Override
     protected void getCallBack(String response) {
-        Type type = new TypeToken<List<SimpleMovie>>(){}.getType();
-        List<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
+        Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
+        ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);
     }
 }
