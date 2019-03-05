@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 import demo.great.zhang.railwayvideo.MainActivity;
 import demo.great.zhang.railwayvideo.R;
 import demo.great.zhang.railwayvideo.Utils.Density;
+import hugo.weaving.DebugLog;
 import okhttp3.Call;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -39,6 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Map<String,String> params;
     protected ProgressDialog mProgress;
 
+    @DebugLog
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -81,7 +81,7 @@ public class FragmentIndex extends BaseFragment {
 
     @Override
     protected void initNet() {
-        if (ConnectionUtils.ping()) {
+        if (ConnectionUtils.ping(getAppActivity())) {
             if(timer!=null){
                 timer.cancel();
                 timer = null;
@@ -120,8 +120,12 @@ public class FragmentIndex extends BaseFragment {
                     }
                 };
             }
-            timer.schedule(timerTask, 2500);
-            getAppActivity().showProgress();
+            if(timerTask != null) {
+                timer.schedule(timerTask, 2500);
+                getAppActivity().showProgress();
+            }else{
+                getAppActivity().dismissProgress();
+            }
         }
 
     }
@@ -136,10 +140,14 @@ public class FragmentIndex extends BaseFragment {
     private void initBanner(List<SimpleMovie> simpleMovies) {
         System.out.println("initBanner");
         banner.setImageLoader(new GlideImageLoader());
-        List<String> urlList = new ArrayList<>();
+        List<Integer> urlList = new ArrayList<>();
         List<String> titleType = new ArrayList<>();
         for (SimpleMovie simpleMovie : simpleMovies) {
-            urlList.add(simpleMovie.getImage());
+            if(simpleMovie.getSubtype().equals("file")) {
+                urlList.add(R.mipmap.file_all);
+            }else{
+                urlList.add(R.mipmap.video_all);
+            }
             titleType.add(simpleMovie.getTitle());
         }
         banner.setImages(urlList);

@@ -24,7 +24,6 @@ import java.util.List;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -75,6 +74,8 @@ public class PlayVideoActivity extends BaseActivity {
     TextView tvShowMore;
     @BindView(R.id.tv_episodes)
     RecyclerView tvEpisodes;
+    @BindView(R.id.tv_rating)
+    TextView tvRating;
 
     private ProgressDialog progressDialog;
 
@@ -128,11 +129,14 @@ public class PlayVideoActivity extends BaseActivity {
         subtype = getIntent().getStringExtra("subtype");
         params.clear();
         params.put("id", String.valueOf(id));
+        System.out.println("show");
+        showProgress();
         HttpGet(URLConst.GETDETAIL, params, GETDETAIL);
     }
 
     private void setViewByType() {
         tvTitle.setText(detailMovie.getTitle());
+        tvRating.setText(null == detailMovie.getRating()?"0 分":detailMovie.getRating().getAverage()+" 分");
         tvDescripte.setText(String.format(getResources().getString(R.string.descripte), detailMovie.getSummary()));
         String gen = detailMovie.getGenres().toString();
         gen = gen.substring(1, gen.length() - 1);
@@ -161,7 +165,7 @@ public class PlayVideoActivity extends BaseActivity {
                 return true;
             }
         });
-        System.out.println("subtype:"+subtype);
+        System.out.println("subtype:" + subtype);
         switch (subtype) {
             case "movie":
 
@@ -178,7 +182,7 @@ public class PlayVideoActivity extends BaseActivity {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 tvEpisodes.setLayoutManager(linearLayoutManager);
-                EpisodesAdapter adapter = new EpisodesAdapter(this,detailMovie.getResourse());
+                EpisodesAdapter adapter = new EpisodesAdapter(this, detailMovie.getResourse());
                 adapter.setSelectListener(new EpisodesAdapter.EpisodeListener() {
                     @Override
                     public void ItemSelect(int position) {
@@ -221,6 +225,8 @@ public class PlayVideoActivity extends BaseActivity {
         switch (flag) {
             case GETDETAIL:
                 System.out.println(response);
+                System.out.println("dissmiss");
+                dismissProgress();
                 detailMovie = new Gson().fromJson(response, DetailMovie.class);
                 String encode = detailMovie.getResourse().get(0);
                 jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
@@ -286,9 +292,9 @@ public class PlayVideoActivity extends BaseActivity {
     private ItemClickListener itemClickListener = new ItemClickListener() {
         @Override
         public void ItemClick(int mainID, String subtype) {
-            Intent intent = new Intent(mActivity,PlayVideoActivity.class);
-            intent.putExtra("mainID",mainID);
-            intent.putExtra("subtype",subtype);
+            Intent intent = new Intent(mActivity, PlayVideoActivity.class);
+            intent.putExtra("mainID", mainID);
+            intent.putExtra("subtype", subtype);
             startActivity(intent);
         }
     };

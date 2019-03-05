@@ -29,6 +29,7 @@ import demo.great.zhang.railwayvideo.fragment.FragmentIndex;
 import demo.great.zhang.railwayvideo.fragment.FragmentSearch;
 import demo.great.zhang.railwayvideo.fragment.FragmentSetting;
 import demo.great.zhang.railwayvideo.fragment.FragmentSubtype;
+import hugo.weaving.DebugLog;
 
 public class MainActivity extends BaseActivity {
 
@@ -48,11 +49,13 @@ public class MainActivity extends BaseActivity {
         return navigation;
     }
 
+    @DebugLog
     @Override
     protected int getLayout() {
         return R.layout.activity_main;
     }
 
+    @DebugLog
     @Override
     protected void initEvent() {
         MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -72,38 +75,38 @@ public class MainActivity extends BaseActivity {
                 });
         navigation.setItemIconTintList(null);
     }
-
+    @DebugLog
     private void setNettest() {
-        WIFIUtils wifiUtils = new WIFIUtils(this);
-        List<String> ssidList = new ArrayList<>();
-        for(ScanResult scanResult : wifiUtils.getWifiList()){
-            ssidList.add(scanResult.SSID);
-        }
-
-        if(!ssidList.contains(Consts.STATICSSID)){
-            dismissProgress();
-            showNormalDialog(this,"请在对应Wi-Fi区域内使用！");
-            return;
-        }
-        wifiUtils.openWifi();
-        boolean isConnect = wifiUtils.connectWifi(Consts.STATICSSID, Consts.STATICPWD);
-        System.out.println(isConnect);
-        if (isConnect) {
+//        WIFIUtils wifiUtils = new WIFIUtils(this);
+//        List<String> ssidList = new ArrayList<>();
+//        for(ScanResult scanResult : wifiUtils.getWifiList()){
+//            ssidList.add(scanResult.SSID);
+//        }
+//
+//        if(!ssidList.contains(Consts.STATICSSID)){
+//            dismissProgress();
+//            showNormalDialog(this,"请在对应Wi-Fi区域内使用！");
+//            return;
+//        }
+//        wifiUtils.openWifi();
+//        boolean isConnect = wifiUtils.connectWifi(Consts.STATICSSID, Consts.STATICPWD);
+//        System.out.println(isConnect);
+//        if (isConnect) {
             initFragment();
-            dismissProgress();
-        } else {
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    setNettest();
-                }
-            };
-            Timer timer = new Timer();
-            timer.schedule(timerTask, 2000);
-        }
+//            dismissProgress();
+//        } else {
+//            TimerTask timerTask = new TimerTask() {
+//                @Override
+//                public void run() {
+//                    setNettest();
+//                }
+//            };
+//            Timer timer = new Timer();
+//            timer.schedule(timerTask, 2000);
+//        }
     }
 
-
+    @DebugLog
     private void initFragment() {
         fragmentIndex = new FragmentIndex();
         fragmentSubtype = new FragmentSubtype();

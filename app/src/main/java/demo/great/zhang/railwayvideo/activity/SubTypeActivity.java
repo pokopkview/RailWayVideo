@@ -49,6 +49,7 @@ public class SubTypeActivity extends BaseActivity {
     protected void initEvent() {
         String name = getIntent().getStringExtra("sub_name");
         GenresViewModel genresViewModel = ViewModelProviders.of(this).get(GenresViewModel.class);
+        tvSubName.setText(name);
         genresViewModel.getGenresMovie(name).observe(this, new Observer<ListObject<SimpleMovie>>() {
             @Override
             public void onChanged(ListObject<SimpleMovie> simpleMovies) {

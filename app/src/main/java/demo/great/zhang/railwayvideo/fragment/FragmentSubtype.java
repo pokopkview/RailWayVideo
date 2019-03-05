@@ -25,7 +25,7 @@ public class FragmentSubtype extends BaseFragment {
     @BindView(R.id.rv_subtype)
     RecyclerView rvSubtype;
     String [] subtype = {"剧情","喜剧","动作","爱情","科幻","动画","悬疑","惊悚","恐怖","犯罪"
-            ,"战争","传记","同性","音乐","歌舞","西部","奇幻","冒险","灾难","武侠","情色"};
+            ,"战争","传记","音乐","歌舞","西部","奇幻","冒险","灾难","武侠","自定义"};
 
     @Override
     protected Object getContentLayout() {

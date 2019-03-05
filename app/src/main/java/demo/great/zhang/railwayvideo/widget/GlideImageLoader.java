@@ -13,7 +13,6 @@ import demo.great.zhang.railwayvideo.net.URLConst;
 public class GlideImageLoader extends ImageLoader {
     @Override
     public void displayImage(Context context, Object path, ImageView imageView) {
-        path = URLConst.IMAGEPRE +path;
         Glide.with(context)
                 .load(path)
                 .apply(new RequestOptions().transforms(new CenterCrop()))

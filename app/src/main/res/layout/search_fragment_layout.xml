@@ -33,6 +33,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:id="@+id/rl_search"
         android:layout_height="match_parent"/>
 
