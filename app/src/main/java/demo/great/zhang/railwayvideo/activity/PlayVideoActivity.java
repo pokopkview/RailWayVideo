@@ -2,6 +2,7 @@ package demo.great.zhang.railwayvideo.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +33,8 @@ import butterknife.OnClick;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import demo.great.zhang.railwayvideo.R;
+import demo.great.zhang.railwayvideo.Utils.JZMediaIjkplayer;
+import demo.great.zhang.railwayvideo.Utils.OpenFileUtils;
 import demo.great.zhang.railwayvideo.Utils.URLChange;
 import demo.great.zhang.railwayvideo.adapter.EpisodesAdapter;
 import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
@@ -84,6 +87,9 @@ public class PlayVideoActivity extends BaseActivity {
     private boolean hasShow = false;
 
 
+    private File download;
+
+
     @Override
     protected int getLayout() {
         return R.layout.activity_play_video;
@@ -92,10 +98,12 @@ public class PlayVideoActivity extends BaseActivity {
     @OnClick(R.id.bt_download)
     public void downloadClick(View view) {
         File str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+//        File str = new File(this.getFilesDir().getAbsolutePath());
         checkPermission();
         if (detailMovie != null) {
             String url = detailMovie.getResourse().get(0);
-
+            url = URLConst.baseurl+url.split("8080")[1];
             System.out.println(url);
             String name = url.substring(url.lastIndexOf("/"));
             showDownloadProgress();
@@ -111,6 +119,7 @@ public class PlayVideoActivity extends BaseActivity {
 
                         @Override
                         public void onResponse(File response, int id) {
+                            download = response;
                             showMsg("下载成功！");
                         }
 
@@ -188,6 +197,8 @@ public class PlayVideoActivity extends BaseActivity {
                     public void ItemSelect(int position) {
                         adapter.notifyDataSetChanged();
                         String encode = detailMovie.getResourse().get(position);
+                        System.out.println("encode:"+encode);
+                        encode = URLConst.baseurl + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
                         jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
                         jzVideo.startVideo();
                     }
@@ -229,6 +240,17 @@ public class PlayVideoActivity extends BaseActivity {
                 dismissProgress();
                 detailMovie = new Gson().fromJson(response, DetailMovie.class);
                 String encode = detailMovie.getResourse().get(0);
+                encode = URLConst.baseurl + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
+//                encode = URLConst.baseurl +"/video/21克.mkv";
+                System.out.println("encode:"+encode);
+                JzvdStd.setMediaInterface(new JZMediaIjkplayer());
+//                if(encode.endsWith("mkv")) {
+//                    JzvdStd.setMediaInterface(new JZMediaIjkplayer());
+//                    jzVideo.setUp(encode, detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
+//                }else{
+//                    jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
+//
+//                }
                 jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
                 jzVideo.startVideo();
                 setViewByType();
@@ -272,9 +294,16 @@ public class PlayVideoActivity extends BaseActivity {
         progressDialog.setMax(100);
         progressDialog.setProgress(0);
         progressDialog.setIndeterminate(false);//明确显示进度
-        progressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+        progressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "打开", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                OpenFileUtils.openFile(getApplicationContext(),download);
+            }
+        });
+        progressDialog.setButton(ProgressDialog.BUTTON_NEGATIVE, "关闭", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         //是否可以通过返回按钮退出对话框

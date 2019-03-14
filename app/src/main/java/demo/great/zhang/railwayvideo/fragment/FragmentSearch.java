@@ -1,8 +1,10 @@
 package demo.great.zhang.railwayvideo.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -79,6 +81,9 @@ public class FragmentSearch extends BaseFragment {
     private Observer<ListObject<SimpleMovie>> observer = new Observer<ListObject<SimpleMovie>>() {
         @Override
         public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+            InputMethodManager manager = ((InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+            if (manager != null)
+                manager.hideSoftInputFromWindow(btSearchConfrim.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
             RecommendAdapter adapter = new RecommendAdapter(getAppActivity(), simpleMovies.getList());
             rlSearch.setLayoutManager(new GridLayoutManager(getAppActivity(), 3));
             rlSearch.setAdapter(adapter);

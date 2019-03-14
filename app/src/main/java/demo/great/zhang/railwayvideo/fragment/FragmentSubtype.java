@@ -36,7 +36,7 @@ public class FragmentSubtype extends BaseFragment {
     protected void initNet() {
         SubTypeAdapter adapter = new SubTypeAdapter(getAppActivity(), Arrays.asList(subtype));
         rvSubtype.setAdapter(adapter);
-        rvSubtype.addItemDecoration(new GridDividerItemDecoration(getAppActivity(),4,2,true,true,getAppActivity().getResources().getColor(R.color.nagative_blue)));
+        rvSubtype.addItemDecoration(new GridDividerItemDecoration(getAppActivity(),4,2,true,true));
         rvSubtype.setLayoutManager(new GridLayoutManager(getAppActivity(),4));
         adapter.setItemClick(new SimpleItemClickListenner() {
             @Override

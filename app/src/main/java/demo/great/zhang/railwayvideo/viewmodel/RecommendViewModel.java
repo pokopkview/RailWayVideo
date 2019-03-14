@@ -25,6 +25,9 @@ public class RecommendViewModel extends AbsViewModel {
         return mutableLiveData;
     }
 
+    public void reGet(){
+        HttpGet(URLConst.GETRECOMMEND,value);
+    }
 
     @Override
     protected void getCallBack(String response) {

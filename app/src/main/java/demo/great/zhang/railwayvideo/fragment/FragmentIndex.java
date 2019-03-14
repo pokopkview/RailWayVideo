@@ -1,6 +1,7 @@
 package demo.great.zhang.railwayvideo.fragment;
 
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import butterknife.OnClick;
 import demo.great.zhang.railwayvideo.MainActivity;
 import demo.great.zhang.railwayvideo.R;
 import demo.great.zhang.railwayvideo.Utils.ConnectionUtils;
+import demo.great.zhang.railwayvideo.Utils.WIFIUtils;
 import demo.great.zhang.railwayvideo.activity.PlayVideoActivity;
 import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
 import demo.great.zhang.railwayvideo.adapter.RecommendAdapter;
@@ -55,6 +57,11 @@ public class FragmentIndex extends BaseFragment {
     private Timer timer;
     private TimerTask timerTask;
 
+    private boolean hasConnect = false;
+
+    HotViewModel hotViewModel;
+    RecommendViewModel recommendViewModel;
+
 
     @Override
     protected Object getContentLayout() {
@@ -67,6 +74,39 @@ public class FragmentIndex extends BaseFragment {
 
 
     }
+
+    private CountDownTimer netDown = new CountDownTimer(3000,1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            System.out.println("hasConnect:"+hasConnect+hotViewModel);
+            if(!hasConnect){
+                if(hotViewModel!=null){
+                    hotViewModel.reGet();
+                }
+                if(recommendViewModel!=null){
+                    recommendViewModel.reGet();
+                }
+            }
+        }
+    };
+
+
+    private CountDownTimer countDownTimer = new CountDownTimer(2000,1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            initNet();
+        }
+    };
 
 
     @OnClick(R.id.rl_header)
@@ -81,51 +121,29 @@ public class FragmentIndex extends BaseFragment {
 
     @Override
     protected void initNet() {
+        System.out.println("initNet"+ConnectionUtils.ping(getAppActivity()));
         if (ConnectionUtils.ping(getAppActivity())) {
-            if(timer!=null){
-                timer.cancel();
-                timer = null;
-                timerTask.cancel();
-                timerTask = null;
-            }
             getAppActivity().dismissProgress();
-            HotViewModel hotViewModel = ViewModelProviders.of(this).get(HotViewModel.class);
+            hotViewModel = ViewModelProviders.of(this).get(HotViewModel.class);
+            netDown.start();
             hotViewModel.getHotResource().observe(this, new Observer<ListObject<SimpleMovie>>() {
                 @Override
                 public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+                    hasConnect = true;
                     initBanner(simpleMovies.getList());
-                    initRecycle(simpleMovies.getList());
                 }
             });
 
-            RecommendViewModel recommendViewModel = ViewModelProviders.of(this).get(RecommendViewModel.class);
+            recommendViewModel = ViewModelProviders.of(this).get(RecommendViewModel.class);
             recommendViewModel.getRecommend().observe(this, new Observer<ListObject<SimpleMovie>>() {
                 @Override
                 public void onChanged(ListObject<SimpleMovie> simpleMovies) {
-
+                    hasConnect = true;
+                    initRecycle(simpleMovies.getList());
                 }
             });
         } else {
-            if(timer==null) {
-                timer = new Timer();
-                timerTask = new TimerTask() {
-                    @Override
-                    public void run() {
-                        getAppActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                initNet();
-                            }
-                        });
-                    }
-                };
-            }
-            if(timerTask != null) {
-                timer.schedule(timerTask, 2500);
-                getAppActivity().showProgress();
-            }else{
-                getAppActivity().dismissProgress();
-            }
+            countDownTimer.start();
         }
 
     }

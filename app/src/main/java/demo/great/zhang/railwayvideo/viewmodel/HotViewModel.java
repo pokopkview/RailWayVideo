@@ -8,6 +8,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import demo.great.zhang.railwayvideo.Utils.WIFIUtils;
 import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.net.URLConst;
@@ -26,6 +27,9 @@ public class HotViewModel extends AbsViewModel {
     }
 
 
+    public void reGet(){
+        HttpGet(URLConst.GETHOT,value);
+    }
 
 
     @Override

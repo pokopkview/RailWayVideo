@@ -148,7 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity {
          */
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(context);
-        normalDialog.setIcon(R.drawable.ic_launcher_foreground);
+        normalDialog.setIcon(R.mipmap.wifi_icon);
         normalDialog.setTitle("提示");
         normalDialog.setCancelable(false);
         normalDialog.setMessage(title);

@@ -1,8 +1,15 @@
 package demo.great.zhang.railwayvideo;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import demo.great.zhang.railwayvideo.Utils.ConnectionUtils;
 import demo.great.zhang.railwayvideo.Utils.MPermissionUtils;
 import demo.great.zhang.railwayvideo.Utils.WIFIUtils;
 import demo.great.zhang.railwayvideo.application.Consts;
@@ -42,8 +50,11 @@ public class MainActivity extends BaseActivity {
     private FragmentSearch fragmentSearch;
     private FragmentSetting fragmentSetting;
     private BaseFragment[] fragments;
+    private boolean validate = false;
 
     private int lastfragment;
+
+    private WIFIUtils wifiUtils;
 
     public BottomNavigationView getNavigation() {
         return navigation;
@@ -57,18 +68,53 @@ public class MainActivity extends BaseActivity {
 
     @DebugLog
     @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @DebugLog
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!validate) {
+            MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    new MPermissionUtils.OnPermissionListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            System.out.println("onPermissionGranted");
+                            showProgress();
+                            validate = true;
+                            setNettest();
+                        }
+
+                        @Override
+                        public void onPermissionDenied() {
+                            System.out.println("onPermissionDenied");
+                            showMsg("无权限，应用将无法使用");
+                            finish();
+                        }
+                    });
+        }
+    }
+
+    @DebugLog
+    @Override
     protected void initEvent() {
         MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION},
                 new MPermissionUtils.OnPermissionListener() {
                     @Override
                     public void onPermissionGranted() {
+                        System.out.println("onPermissionGranted");
                         showProgress();
+                        validate = true;
                         setNettest();
                     }
 
                     @Override
                     public void onPermissionDenied() {
+                        System.out.println("onPermissionDenied");
                         showMsg("无权限，应用将无法使用");
                         finish();
                     }
@@ -77,34 +123,46 @@ public class MainActivity extends BaseActivity {
     }
     @DebugLog
     private void setNettest() {
-//        WIFIUtils wifiUtils = new WIFIUtils(this);
-//        List<String> ssidList = new ArrayList<>();
-//        for(ScanResult scanResult : wifiUtils.getWifiList()){
-//            ssidList.add(scanResult.SSID);
-//        }
-//
-//        if(!ssidList.contains(Consts.STATICSSID)){
-//            dismissProgress();
-//            showNormalDialog(this,"请在对应Wi-Fi区域内使用！");
-//            return;
-//        }
-//        wifiUtils.openWifi();
-//        boolean isConnect = wifiUtils.connectWifi(Consts.STATICSSID, Consts.STATICPWD);
-//        System.out.println(isConnect);
-//        if (isConnect) {
+        System.out.println("setNettest");
+        if(wifiUtils==null) {
+            wifiUtils = new WIFIUtils(this);
+        }
+        wifiUtils.openWifi();
+        List<String> ssidList = new ArrayList<>();
+        if(wifiUtils.getWifiList().isEmpty()){
+            countDownTimer.start();
+            return;
+        }
+        for(ScanResult scanResult : wifiUtils.getWifiList()){
+            System.out.println(scanResult.SSID);
+            ssidList.add(scanResult.SSID);
+        }
+
+        if(!ssidList.contains(Consts.STATICSSID)){
+            dismissProgress();
+            showNormalDialog(this,"请在对应Wi-Fi区域内使用！");
+            return;
+        }
+        boolean isConnect = wifiUtils.connectWifi(Consts.STATICSSID, Consts.STATICPWD);
+        if (isConnect && wifiUtils.getSSID().equals("\""+Consts.STATICSSID+"\"") && ConnectionUtils.ping(this)) {
             initFragment();
-//            dismissProgress();
-//        } else {
-//            TimerTask timerTask = new TimerTask() {
-//                @Override
-//                public void run() {
-//                    setNettest();
-//                }
-//            };
-//            Timer timer = new Timer();
-//            timer.schedule(timerTask, 2000);
-//        }
+            dismissProgress();
+        } else {
+            countDownTimer.start();
+        }
     }
+
+    private CountDownTimer countDownTimer = new CountDownTimer(2000,1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            setNettest();
+        }
+    };
 
     @DebugLog
     private void initFragment() {
@@ -188,5 +246,4 @@ public class MainActivity extends BaseActivity {
             finish();
         }
     }
-
 }

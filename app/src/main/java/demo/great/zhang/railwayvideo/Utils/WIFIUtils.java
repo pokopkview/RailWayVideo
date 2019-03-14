@@ -20,8 +20,11 @@ public class WIFIUtils {
     // 定义一个WifiLock
     WifiManager.WifiLock mWifiLock;
 
+    Context mContext;
+
     // 构造器
     public WIFIUtils(Context context) {
+        this.mContext = context;
         // 取得WifiManager对象
         mWifiManager = (WifiManager) context
                 .getSystemService(Context.WIFI_SERVICE);
@@ -41,6 +44,10 @@ public class WIFIUtils {
         if (mWifiManager.isWifiEnabled()) {
             mWifiManager.setWifiEnabled(false);
         }
+    }
+
+    public boolean wifiState(){
+        return mWifiManager.isWifiEnabled();
     }
 
     // 锁定WifiLock
@@ -99,6 +106,15 @@ public class WIFIUtils {
         return (mWifiInfo == null) ? "NULL" : mWifiInfo.getBSSID();
     }
 
+    public String getSSID() {
+        mWifiManager = (WifiManager) mContext
+                .getSystemService(Context.WIFI_SERVICE);
+        // 取得WifiInfo对象
+        mWifiInfo = mWifiManager.getConnectionInfo();
+
+        return (mWifiInfo == null) ? "NULL" : mWifiInfo.getSSID();
+    }
+
     // 得到IP地址
     public int getIPAddress() {
         return (mWifiInfo == null) ? 0 : mWifiInfo.getIpAddress();
@@ -133,6 +149,9 @@ public class WIFIUtils {
      * @return
      */
     public boolean connectWifi(String ssid, String psw) {
+        if(mWifiInfo.getSSID().equals("\""+ssid+"\"")){
+            return true;
+        }
         WifiConfiguration config = isExsits(ssid);
         if(null != config){
 //            mWifiManager.removeNetwork(config.networkId);
