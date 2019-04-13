@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/dimgray"
+    android:orientation="vertical"
+    android:layout_height="200dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView
+        android:scaleType="fitXY"
+        android:id="@+id/iv_type"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@mipmap/video_greens"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+        <View
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
+            android:text="9 分"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:id="@+id/tv_rating"
+            android:textColor="@color/orange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:text="askjdasjdhasjkdhkjashdjashdasjhdasjhdjas"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:maxLines="3"
+        android:layout_marginRight="20dp"
+        android:ellipsize="end"
+        android:id="@+id/tv_detail"
+        android:layout_below="@id/iv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>

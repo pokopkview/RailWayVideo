@@ -44,11 +44,15 @@ public class MainLayoutAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         System.out.println(date.get(position).getTitle());
         ((ViewHolders)holder).tvName.setText(date.get(position).getTitle());
-        Integer img;
-        if(date.get(position).getSubtype().equals("file")){
-            img = R.mipmap.file_all;
+        Object img;
+        if(date.get(position).getImage().equals("custom_image.png")) {
+            if (date.get(position).getSubtype().equals("file")) {
+                img = R.mipmap.file_greens;
+            } else {
+                img = R.mipmap.video_green;
+            }
         }else{
-            img = R.mipmap.video_all;
+            img = URLConst.IMAGEPRE()+date.get(position).getImage();
         }
 
         Glide.with(mContext).load(img)

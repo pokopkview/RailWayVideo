@@ -584,4 +584,41 @@ public class DetailMovie {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "DetailMovie{" +
+                "mainID=" + mainID +
+                ", rating=" + rating +
+                ", reviews_count=" + reviews_count +
+                ", wish_count=" + wish_count +
+                ", douban_site='" + douban_site + '\'' +
+                ", year='" + year + '\'' +
+                ", images=" + images +
+                ", alt='" + alt + '\'' +
+                ", id='" + id + '\'' +
+                ", mobile_url='" + mobile_url + '\'' +
+                ", title='" + title + '\'' +
+                ", do_count=" + do_count +
+                ", share_url='" + share_url + '\'' +
+                ", seasons_count=" + seasons_count +
+                ", schedule_url='" + schedule_url + '\'' +
+                ", episodes_count=" + episodes_count +
+                ", collect_count=" + collect_count +
+                ", current_season=" + current_season +
+                ", original_title='" + original_title + '\'' +
+                ", summary='" + summary + '\'' +
+                ", subtype='" + subtype + '\'' +
+                ", comments_count=" + comments_count +
+                ", ratings_count=" + ratings_count +
+                ", recommend=" + recommend +
+                ", hot=" + hot +
+                ", countries=" + countries +
+                ", genres=" + genres +
+                ", casts=" + casts +
+                ", directors=" + directors +
+                ", aka=" + aka +
+                ", resourse=" + resourse +
+                '}';
+    }
 }

@@ -27,7 +27,7 @@ public class SearchByTitleViewMode extends AbsViewModel {
     public void search(String title){
         value.clear();
         value.put("title",title);
-        HttpGet(URLConst.GETMOVIEBYTITLE,value);
+        HttpGet(URLConst.GETMOVIEBYTITLE(),value);
     }
 
     @Override
@@ -35,5 +35,10 @@ public class SearchByTitleViewMode extends AbsViewModel {
         Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
         ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);
+    }
+
+    @Override
+    protected void getError() {
+
     }
 }

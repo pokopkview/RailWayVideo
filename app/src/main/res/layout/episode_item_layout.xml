@@ -7,7 +7,6 @@
     android:layout_height="30dp">
 
     <TextView
-        android:textStyle="bold"
         android:id="@+id/tv_episodes"
         android:textSize="16sp"
         android:textColor="@color/nagative_blue"

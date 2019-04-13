@@ -16,6 +16,7 @@ public abstract class AbsViewModel extends ViewModel {
     protected abstract void getCallBack(String response);
 
     protected void HttpGet(String url,Map<String,String> params){
+        System.out.println(url);
         OkHttpUtils.get()
                 .url(url)
                 .params(params)
@@ -23,7 +24,7 @@ public abstract class AbsViewModel extends ViewModel {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-
+                        getError();
                     }
 
                     @Override
@@ -32,5 +33,7 @@ public abstract class AbsViewModel extends ViewModel {
                     }
                 });
     }
+
+    protected abstract void getError();
 
 }

@@ -20,13 +20,13 @@ public class RecommendViewModel extends AbsViewModel {
     public LiveData<ListObject<SimpleMovie>> getRecommend(){
         if(mutableLiveData==null){
             mutableLiveData = new MutableLiveData<>();
-            HttpGet(URLConst.GETRECOMMEND,value);
+            HttpGet(URLConst.GETRECOMMEND(),value);
         }
         return mutableLiveData;
     }
 
     public void reGet(){
-        HttpGet(URLConst.GETRECOMMEND,value);
+        HttpGet(URLConst.GETRECOMMEND(),value);
     }
 
     @Override
@@ -34,6 +34,11 @@ public class RecommendViewModel extends AbsViewModel {
         Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
         ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);
+
+    }
+
+    @Override
+    protected void getError() {
 
     }
 

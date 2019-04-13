@@ -21,14 +21,14 @@ public class HotViewModel extends AbsViewModel {
     public LiveData<ListObject<SimpleMovie>> getHotResource(){
         if(mutableLiveData==null){
             mutableLiveData = new MutableLiveData<>();
-            HttpGet(URLConst.GETHOT,value);
+            HttpGet(URLConst.GETHOT(),value);
         }
         return mutableLiveData;
     }
 
 
     public void reGet(){
-        HttpGet(URLConst.GETHOT,value);
+        HttpGet(URLConst.GETHOT(),value);
     }
 
 
@@ -37,5 +37,10 @@ public class HotViewModel extends AbsViewModel {
         Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
         ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);
+    }
+
+    @Override
+    protected void getError() {
+
     }
 }

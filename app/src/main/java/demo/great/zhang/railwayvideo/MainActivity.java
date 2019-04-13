@@ -101,6 +101,7 @@ public class MainActivity extends BaseActivity {
     @DebugLog
     @Override
     protected void initEvent() {
+        System.out.println("MainActivity:initEvent");
         MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION},
                 new MPermissionUtils.OnPermissionListener() {
@@ -123,7 +124,6 @@ public class MainActivity extends BaseActivity {
     }
     @DebugLog
     private void setNettest() {
-        System.out.println("setNettest");
         if(wifiUtils==null) {
             wifiUtils = new WIFIUtils(this);
         }
@@ -134,7 +134,6 @@ public class MainActivity extends BaseActivity {
             return;
         }
         for(ScanResult scanResult : wifiUtils.getWifiList()){
-            System.out.println(scanResult.SSID);
             ssidList.add(scanResult.SSID);
         }
 

@@ -42,11 +42,15 @@ public class RecommendAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((reViewHolder)holder).tvTitle.setText(data.get(position).getTitle());
-        Integer img;
-        if(data.get(position).getSubtype().equals("file")){
-            img = R.mipmap.file_all;
+        Object img;
+        if(data.get(position).getImage().equals("custom_image.png")) {
+            if (data.get(position).getSubtype().equals("file")) {
+                img = R.mipmap.file_greens;
+            } else {
+                img = R.mipmap.video_green;
+            }
         }else{
-            img = R.mipmap.video_all;
+            img = URLConst.IMAGEPRE()+data.get(position).getImage();
         }
         Glide.with(mContext).load(img)
                 .into(((reViewHolder) holder).ivPoster);

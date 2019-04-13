@@ -22,7 +22,7 @@ public class GenresViewModel extends AbsViewModel {
             mutableLiveData = new MutableLiveData<>();
             value.clear();
             value.put("gen",gen);
-            HttpGet(URLConst.GETGEN,value);
+            HttpGet(URLConst.GETGEN(),value);
         }
         return mutableLiveData;
     }
@@ -35,5 +35,10 @@ public class GenresViewModel extends AbsViewModel {
         Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
         ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);
+    }
+
+    @Override
+    protected void getError() {
+
     }
 }

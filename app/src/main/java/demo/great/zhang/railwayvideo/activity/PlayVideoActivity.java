@@ -20,7 +20,9 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
@@ -71,6 +73,7 @@ public class PlayVideoActivity extends BaseActivity {
     String subtype;
 
     private static final int GETDETAIL = 1;
+    private static final int SETWATCHED = 2;
 
     private static int REQUEST_PERMISSION_CODE = 101;
     @BindView(R.id.tv_show_more)
@@ -103,7 +106,7 @@ public class PlayVideoActivity extends BaseActivity {
         checkPermission();
         if (detailMovie != null) {
             String url = detailMovie.getResourse().get(0);
-            url = URLConst.baseurl+url.split("8080")[1];
+            url = URLConst.baseurl()+url.split("8080")[1];
             System.out.println(url);
             String name = url.substring(url.lastIndexOf("/"));
             showDownloadProgress();
@@ -140,7 +143,7 @@ public class PlayVideoActivity extends BaseActivity {
         params.put("id", String.valueOf(id));
         System.out.println("show");
         showProgress();
-        HttpGet(URLConst.GETDETAIL, params, GETDETAIL);
+        HttpGet(URLConst.GETDETAIL(), params, GETDETAIL);
     }
 
     private void setViewByType() {
@@ -191,6 +194,7 @@ public class PlayVideoActivity extends BaseActivity {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 tvEpisodes.setLayoutManager(linearLayoutManager);
+                System.out.println(detailMovie.toString());
                 EpisodesAdapter adapter = new EpisodesAdapter(this, detailMovie.getResourse());
                 adapter.setSelectListener(new EpisodesAdapter.EpisodeListener() {
                     @Override
@@ -198,7 +202,7 @@ public class PlayVideoActivity extends BaseActivity {
                         adapter.notifyDataSetChanged();
                         String encode = detailMovie.getResourse().get(position);
                         System.out.println("encode:"+encode);
-                        encode = URLConst.baseurl + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
+                        encode = URLConst.baseurl() + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
                         jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
                         jzVideo.startVideo();
                     }
@@ -240,9 +244,12 @@ public class PlayVideoActivity extends BaseActivity {
                 dismissProgress();
                 detailMovie = new Gson().fromJson(response, DetailMovie.class);
                 String encode = detailMovie.getResourse().get(0);
-                encode = URLConst.baseurl + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
+                encode = URLConst.baseurl() + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
 //                encode = URLConst.baseurl +"/video/21克.mkv";
                 System.out.println("encode:"+encode);
+                params.clear();
+                params.put("id",String.valueOf(detailMovie.getMainID()));
+                HttpGet(URLConst.SETWATCHED(),params,SETWATCHED);//提交已观看
                 JzvdStd.setMediaInterface(new JZMediaIjkplayer());
 //                if(encode.endsWith("mkv")) {
 //                    JzvdStd.setMediaInterface(new JZMediaIjkplayer());
@@ -254,6 +261,9 @@ public class PlayVideoActivity extends BaseActivity {
                 jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
                 jzVideo.startVideo();
                 setViewByType();
+                break;
+            case SETWATCHED:
+
                 break;
         }
     }

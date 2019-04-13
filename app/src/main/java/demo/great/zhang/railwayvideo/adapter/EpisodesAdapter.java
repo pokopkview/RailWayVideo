@@ -45,6 +45,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter {
             ((EpisodeViewHolder) holder).tvEpisode.setTextColor(mContext.getResources().getColor(R.color.gray));
             holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.episodes_simple_shape));
         }
+        holder.setIsRecyclable(false);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +68,6 @@ public class EpisodesAdapter extends RecyclerView.Adapter {
             tvEpisode = itemView.findViewById(R.id.tv_episodes);
         }
     }
-
     public interface EpisodeListener{
         void ItemSelect(int position);
     }

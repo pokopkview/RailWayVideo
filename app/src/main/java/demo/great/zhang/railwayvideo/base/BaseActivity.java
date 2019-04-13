@@ -38,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected static Toast toast;
     protected Map<String,String> params;
+
     protected ProgressDialog mProgress;
 
     @DebugLog

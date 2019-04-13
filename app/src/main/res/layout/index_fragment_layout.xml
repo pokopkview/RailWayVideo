@@ -58,18 +58,69 @@
             </com.youth.banner.Banner>
 
             <TextView
+                android:textSize="16sp"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:drawableLeft="@mipmap/recommend"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:includeFontPadding="false"
-                android:text="热门推荐"
+                android:text="推荐资源"
                 android:textColor="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:scrollbars="none"
                 android:id="@+id/rl_show_hot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:id="@+id/tv_auto"
+                android:textSize="16sp"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:drawableLeft="@mipmap/auto"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:includeFontPadding="false"
+                android:text="内部资源"
+                android:textColor="@color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:scrollbars="none"
+                android:id="@+id/rl_show_auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_recent"
+                android:textSize="16sp"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:drawableLeft="@mipmap/recent"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:includeFontPadding="false"
+                android:text="最新资源"
+                android:textColor="@color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:scrollbars="none"
+                android:id="@+id/rl_show_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
