@@ -31,6 +31,7 @@ public class RecommendViewModel extends AbsViewModel {
 
     @Override
     protected void getCallBack(String response) {
+        System.out.println(response);
         Type type = new TypeToken<ListObject<SimpleMovie>>(){}.getType();
         ListObject<SimpleMovie> simpleMovieList = new Gson().fromJson(response,type);
         mutableLiveData.setValue(simpleMovieList);

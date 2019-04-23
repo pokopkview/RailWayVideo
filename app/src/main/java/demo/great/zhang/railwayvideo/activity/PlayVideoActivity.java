@@ -47,6 +47,7 @@ import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.net.URLConst;
 import demo.great.zhang.railwayvideo.viewmodel.GenresViewModel;
+import me.samlss.broccoli.Broccoli;
 import okhttp3.Call;
 
 public class PlayVideoActivity extends BaseActivity {
@@ -142,7 +143,7 @@ public class PlayVideoActivity extends BaseActivity {
         params.clear();
         params.put("id", String.valueOf(id));
         System.out.println("show");
-        showProgress();
+        showProgress(true,"等待加载～");
         HttpGet(URLConst.GETDETAIL(), params, GETDETAIL);
     }
 
@@ -239,8 +240,6 @@ public class PlayVideoActivity extends BaseActivity {
     protected void getCallBack(String response, int flag) {
         switch (flag) {
             case GETDETAIL:
-                System.out.println(response);
-                System.out.println("dissmiss");
                 dismissProgress();
                 detailMovie = new Gson().fromJson(response, DetailMovie.class);
                 String encode = detailMovie.getResourse().get(0);
@@ -338,12 +337,18 @@ public class PlayVideoActivity extends BaseActivity {
         }
     };
 
+
+
     @Override
     public void onBackPressed() {
+        System.out.println("onBackPressed1");
         if (Jzvd.backPress()) {
             return;
         }
+        dismissProgress();
         super.onBackPressed();
+
+        System.out.println("onBackPressed2");
     }
 
     @Override

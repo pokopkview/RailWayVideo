@@ -22,6 +22,8 @@ public class AutoViewModel extends AbsViewModel {
             mutableLiveData = new MutableLiveData<>();
             value.clear();
             value.put("gen","自定义");
+            value.put("start","0");
+            value.put("end","6");
             HttpGet(URLConst.GETGEN(),value);
         }
         return mutableLiveData;
@@ -32,6 +34,8 @@ public class AutoViewModel extends AbsViewModel {
     public void reGet(){
         value.clear();
         value.put("gen","自定义");
+        value.put("start","0");
+        value.put("end","6");
         HttpGet(URLConst.GETHOT(),value);
     }
 

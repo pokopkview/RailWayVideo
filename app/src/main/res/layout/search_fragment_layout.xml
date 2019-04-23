@@ -18,6 +18,16 @@
             android:textCursorDrawable="@color/nagative_blue"
             android:theme="@style/MyEditText" />
 
+        <ImageView
+            android:visibility="invisible"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/bt_search_confrim"
+            android:src="@mipmap/clear"
+            android:id="@+id/iv_clear"
+            android:layout_centerInParent="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+
         <Button
             android:id="@+id/bt_search_confrim"
             android:layout_width="54dp"

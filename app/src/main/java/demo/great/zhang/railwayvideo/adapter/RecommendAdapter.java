@@ -62,6 +62,18 @@ public class RecommendAdapter extends RecyclerView.Adapter {
         });
     }
 
+
+    public void addData(List<SimpleMovie> movies){
+        this.data.addAll(movies);
+        notifyDataSetChanged();
+    }
+
+
+    public void clear(){
+        this.data.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return data.size();

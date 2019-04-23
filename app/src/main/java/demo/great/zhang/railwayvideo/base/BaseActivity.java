@@ -129,12 +129,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showProgress(){
+        showProgress(false,"加载中～～");
+    }
+
+    public void showProgress(boolean cancel,String msg){
         mProgress = new ProgressDialog(mActivity);
         mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgress.setMessage(msg);
         //是否可以通过返回按钮退出对话框
-        mProgress.setCancelable(false);
+        mProgress.setCancelable(cancel);
         mProgress.show();
     }
+
+
     public void dismissProgress(){
         mProgress.dismiss();
     }

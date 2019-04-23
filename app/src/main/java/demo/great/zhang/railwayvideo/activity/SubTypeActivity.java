@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -40,6 +41,13 @@ public class SubTypeActivity extends BaseActivity {
     @BindView(R.id.ic_back)
     ImageView icBack;
 
+    GenresViewModel genresViewModel;
+    RecommendAdapter adapter;
+
+    int pageSize = 18;
+    boolean canGetMore = true;
+    boolean getingDate = false;
+
     @Override
     protected int getLayout() {
         return R.layout.activity_sub_type;
@@ -48,29 +56,52 @@ public class SubTypeActivity extends BaseActivity {
     @Override
     protected void initEvent() {
         String name = getIntent().getStringExtra("sub_name");
-        GenresViewModel genresViewModel = ViewModelProviders.of(this).get(GenresViewModel.class);
+        genresViewModel = ViewModelProviders.of(this).get(GenresViewModel.class);
         tvSubName.setText(name);
         genresViewModel.getGenresMovie(name).observe(this, new Observer<ListObject<SimpleMovie>>() {
             @Override
             public void onChanged(ListObject<SimpleMovie> simpleMovies) {
+                System.out.println("SIZE:"+simpleMovies.getList().size());
+                if(adapter!=null){
+                    if(simpleMovies.getList().size()<12){
+                        canGetMore = false;
+                    }
+                    adapter.addData(simpleMovies.getList());
+                    getingDate = false;
+                    return;
+                }
+
                 if (!simpleMovies.getList().isEmpty()) {
                     initRec(simpleMovies.getList());
                 } else {
                     tvEmpty.setVisibility(View.VISIBLE);
                     rvSimpleMovie.setVisibility(View.GONE);
                     tvEmpty.setText("无资源～～");
-
                 }
             }
         });
     }
 
     private void initRec(List<SimpleMovie> simpleMovies) {
-        RecommendAdapter adapter = new RecommendAdapter(mContext, simpleMovies);
+        adapter = new RecommendAdapter(mContext, simpleMovies);
         rvSimpleMovie.setLayoutManager(new GridLayoutManager(mContext, 3));
         rvSimpleMovie.setAdapter(adapter);
         adapter.setCliclListener(itemClickListener);
-
+        rvSimpleMovie.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                System.out.println("onScrolled");
+                if(!rvSimpleMovie.canScrollVertically(1)){
+                    //到底部
+                    if(canGetMore && !getingDate) {
+                        getingDate = true;
+                        genresViewModel.getMore(tvSubName.getText().toString(),simpleMovies.size(), simpleMovies.size() + pageSize);
+                    }else{
+                        showMsg("已经加载所有资源！");
+                    }
+                }
+            }
+        });
     }
 
     private ItemClickListener itemClickListener = new ItemClickListener() {
@@ -87,4 +118,6 @@ public class SubTypeActivity extends BaseActivity {
     public void back(View view){
         onBackPressed();
     }
+
+
 }

@@ -176,19 +176,9 @@ public class FragmentIndex extends BaseFragment {
                     initAutoRecycle(simpleMovieListObject.getList());
                 }
             });
-
-
-
-
-
-
-
-
-
         } else {
             countDownTimer.start();
         }
-
     }
 
     private void initRecycle(List<SimpleMovie> simpleMovies) {

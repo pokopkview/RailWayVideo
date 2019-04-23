@@ -76,7 +76,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if(!validate) {
+            System.out.println("onResume");
             MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     new MPermissionUtils.OnPermissionListener() {
