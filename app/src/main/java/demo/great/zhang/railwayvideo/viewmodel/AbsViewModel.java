@@ -1,5 +1,7 @@
 package demo.great.zhang.railwayvideo.viewmodel;
 
+import android.widget.Toast;
+
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -7,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import androidx.lifecycle.ViewModel;
+
+import demo.great.zhang.railwayvideo.application.RailWayVideoApplication;
 import okhttp3.Call;
 
 public abstract class AbsViewModel extends ViewModel {
@@ -24,6 +28,7 @@ public abstract class AbsViewModel extends ViewModel {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        System.out.println("onError:"+e.getMessage());
                         getError();
                     }
 
@@ -34,6 +39,8 @@ public abstract class AbsViewModel extends ViewModel {
                 });
     }
 
-    protected abstract void getError();
+    private void getError(){
+        Toast.makeText(RailWayVideoApplication.getInstance(),"网络错误！",Toast.LENGTH_LONG).show();
+    }
 
 }

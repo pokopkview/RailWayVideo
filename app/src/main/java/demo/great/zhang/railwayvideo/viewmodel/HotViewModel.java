@@ -39,8 +39,4 @@ public class HotViewModel extends AbsViewModel {
         mutableLiveData.setValue(simpleMovieList);
     }
 
-    @Override
-    protected void getError() {
-
-    }
 }

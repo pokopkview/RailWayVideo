@@ -59,7 +59,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
+        if(mProgress!=null) {
+            mProgress.cancel();
+        }
         super.onDestroy();
     }
 
@@ -129,11 +131,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showProgress(){
-        showProgress(false,"加载中～～");
+        showProgress(false, "加载中～～");
     }
 
     public void showProgress(boolean cancel,String msg){
-        mProgress = new ProgressDialog(mActivity);
+        if(mProgress==null) {
+            mProgress = new ProgressDialog(mActivity);
+        }
+        if(mProgress.isShowing()){
+            return;
+        }
         mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgress.setMessage(msg);
         //是否可以通过返回按钮退出对话框
@@ -143,7 +150,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     public void dismissProgress(){
-        mProgress.dismiss();
+        if(mProgress!=null) {
+            mProgress.dismiss();
+        }
     }
 
 

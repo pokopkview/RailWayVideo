@@ -6,6 +6,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.youth.banner.Banner;
@@ -17,10 +23,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import demo.great.zhang.railwayvideo.MainActivity;
@@ -29,6 +31,7 @@ import demo.great.zhang.railwayvideo.Utils.ConnectionUtils;
 import demo.great.zhang.railwayvideo.activity.PlayVideoActivity;
 import demo.great.zhang.railwayvideo.adapter.ItemClickListener;
 import demo.great.zhang.railwayvideo.adapter.RecommendAdapter;
+import demo.great.zhang.railwayvideo.application.RailWayVideoApplication;
 import demo.great.zhang.railwayvideo.base.BaseFragment;
 import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
@@ -61,10 +64,8 @@ public class FragmentIndex extends BaseFragment {
     TextView tvRecent;
     @BindView(R.id.rl_show_recent)
     RecyclerView rlShowRecent;
-
-
-    private Timer timer;
-    private TimerTask timerTask;
+    @BindView(R.id.tv_recomend)
+    TextView tvRecomend;
 
     private boolean hasConnect = false;
 
@@ -102,10 +103,10 @@ public class FragmentIndex extends BaseFragment {
                 if (recommendViewModel != null) {
                     recommendViewModel.reGet();
                 }
-                if(autoViewModel!=null){
+                if (autoViewModel != null) {
                     autoViewModel.reGet();
                 }
-                if(recentViewModel!=null){
+                if (recentViewModel != null) {
                     recentViewModel.reGet();
                 }
             }
@@ -113,7 +114,7 @@ public class FragmentIndex extends BaseFragment {
     };
 
 
-    private CountDownTimer countDownTimer = new CountDownTimer(2000, 1000) {
+    private CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
 
@@ -139,7 +140,8 @@ public class FragmentIndex extends BaseFragment {
     @Override
     protected void initNet() {
         System.out.println("initNet" + ConnectionUtils.ping(getAppActivity()));
-        if (ConnectionUtils.ping(getAppActivity())) {
+        if (RailWayVideoApplication.connect) {
+            getAppActivity().dismissProgress();
             hotViewModel = ViewModelProviders.of(this).get(HotViewModel.class);
             netDown.start();
             hotViewModel.getHotResource().observe(this, new Observer<ListObject<SimpleMovie>>() {
@@ -177,32 +179,41 @@ public class FragmentIndex extends BaseFragment {
                 }
             });
         } else {
+            getAppActivity().showProgress();
             countDownTimer.start();
         }
     }
 
     private void initRecycle(List<SimpleMovie> simpleMovies) {
         getAppActivity().dismissProgress();
+        if (simpleMovies.size() < 1) {
+            tvRecomend.setVisibility(View.GONE);
+            rlShowHot.setVisibility(View.GONE);
+            return;
+        }
         RecommendAdapter adapter = new RecommendAdapter(getAppActivity(), simpleMovies);
         rlShowHot.setLayoutManager(new GridLayoutManager(getAppActivity(), 3));
         rlShowHot.setNestedScrollingEnabled(false);
         rlShowHot.setAdapter(adapter);
         adapter.setCliclListener(itemClickListener);
     }
+
     private void initRecentRecycle(List<SimpleMovie> simpleMovies) {
-        if (simpleMovies.size()<1) {
+        if (simpleMovies.size() < 1) {
             tvRecent.setVisibility(View.GONE);
             rlShowRecent.setVisibility(View.GONE);
             return;
         }
+        System.out.println("SIZE:"+simpleMovies.size());
         rlShowRecent.setNestedScrollingEnabled(false);
         RecommendAdapter adapter = new RecommendAdapter(getAppActivity(), simpleMovies);
         rlShowRecent.setLayoutManager(new GridLayoutManager(getAppActivity(), 3));
         rlShowRecent.setAdapter(adapter);
         adapter.setCliclListener(itemClickListener);
     }
+
     private void initAutoRecycle(List<SimpleMovie> simpleMovies) {
-        if (simpleMovies.size()<1) {
+        if (simpleMovies.size() < 1) {
             tvAuto.setVisibility(View.GONE);
             rlShowAuto.setVisibility(View.GONE);
             return;
@@ -258,4 +269,11 @@ public class FragmentIndex extends BaseFragment {
             getAppActivity().startActivity(intent);
         }
     };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        countDownTimer.cancel();
+        netDown.cancel();
+    }
 }

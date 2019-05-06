@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -46,8 +45,4 @@ public class GenresViewModel extends AbsViewModel {
         mutableLiveData.setValue(simpleMovieList);
     }
 
-    @Override
-    protected void getError() {
-
-    }
 }

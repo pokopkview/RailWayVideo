@@ -2,7 +2,6 @@ package demo.great.zhang.railwayvideo.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,20 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
+
+import java.io.File;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -47,7 +45,6 @@ import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
 import demo.great.zhang.railwayvideo.net.URLConst;
 import demo.great.zhang.railwayvideo.viewmodel.GenresViewModel;
-import me.samlss.broccoli.Broccoli;
 import okhttp3.Call;
 
 public class PlayVideoActivity extends BaseActivity {
@@ -83,6 +80,10 @@ public class PlayVideoActivity extends BaseActivity {
     RecyclerView tvEpisodes;
     @BindView(R.id.tv_rating)
     TextView tvRating;
+    @BindView(R.id.ic_back)
+    ImageView icBack;
+    @BindView(R.id.tv_sub_name)
+    TextView tvSubName;
 
     private ProgressDialog progressDialog;
 
@@ -107,7 +108,7 @@ public class PlayVideoActivity extends BaseActivity {
         checkPermission();
         if (detailMovie != null) {
             String url = detailMovie.getResourse().get(0);
-            url = URLConst.baseurl()+url.split("8080")[1];
+            url = URLConst.baseurl() + url.split("8080")[1];
             System.out.println(url);
             String name = url.substring(url.lastIndexOf("/"));
             showDownloadProgress();
@@ -143,13 +144,13 @@ public class PlayVideoActivity extends BaseActivity {
         params.clear();
         params.put("id", String.valueOf(id));
         System.out.println("show");
-        showProgress(true,"等待加载～");
+        showProgress(true, "等待加载～");
         HttpGet(URLConst.GETDETAIL(), params, GETDETAIL);
     }
 
     private void setViewByType() {
         tvTitle.setText(detailMovie.getTitle());
-        tvRating.setText(null == detailMovie.getRating()?"0 分":detailMovie.getRating().getAverage()+" 分");
+        tvRating.setText(null == detailMovie.getRating() ? "0 分" : detailMovie.getRating().getAverage() + " 分");
         tvDescripte.setText(String.format(getResources().getString(R.string.descripte), detailMovie.getSummary()));
         String gen = detailMovie.getGenres().toString();
         gen = gen.substring(1, gen.length() - 1);
@@ -202,7 +203,7 @@ public class PlayVideoActivity extends BaseActivity {
                     public void ItemSelect(int position) {
                         adapter.notifyDataSetChanged();
                         String encode = detailMovie.getResourse().get(position);
-                        System.out.println("encode:"+encode);
+                        System.out.println("encode:" + encode);
                         encode = URLConst.baseurl() + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
                         jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
                         jzVideo.startVideo();
@@ -242,13 +243,14 @@ public class PlayVideoActivity extends BaseActivity {
             case GETDETAIL:
                 dismissProgress();
                 detailMovie = new Gson().fromJson(response, DetailMovie.class);
+                tvSubName.setText(detailMovie.getTitle());
                 String encode = detailMovie.getResourse().get(0);
                 encode = URLConst.baseurl() + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
 //                encode = URLConst.baseurl +"/video/21克.mkv";
-                System.out.println("encode:"+encode);
+                System.out.println("encode:" + encode);
                 params.clear();
-                params.put("id",String.valueOf(detailMovie.getMainID()));
-                HttpGet(URLConst.SETWATCHED(),params,SETWATCHED);//提交已观看
+                params.put("id", String.valueOf(detailMovie.getMainID()));
+                HttpGet(URLConst.SETWATCHED(), params, SETWATCHED);//提交已观看
                 JzvdStd.setMediaInterface(new JZMediaIjkplayer());
 //                if(encode.endsWith("mkv")) {
 //                    JzvdStd.setMediaInterface(new JZMediaIjkplayer());
@@ -306,7 +308,7 @@ public class PlayVideoActivity extends BaseActivity {
         progressDialog.setButton(ProgressDialog.BUTTON_POSITIVE, "打开", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                OpenFileUtils.openFile(getApplicationContext(),download);
+                OpenFileUtils.openFile(getApplicationContext(), download);
             }
         });
         progressDialog.setButton(ProgressDialog.BUTTON_NEGATIVE, "关闭", new DialogInterface.OnClickListener() {
@@ -338,22 +340,30 @@ public class PlayVideoActivity extends BaseActivity {
     };
 
 
-
     @Override
     public void onBackPressed() {
-        System.out.println("onBackPressed1");
         if (Jzvd.backPress()) {
             return;
         }
         dismissProgress();
         super.onBackPressed();
-
-        System.out.println("onBackPressed2");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Jzvd.releaseAllVideos();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.ic_back)
+    public void onViewClicked() {
+        onBackPressed();
     }
 }

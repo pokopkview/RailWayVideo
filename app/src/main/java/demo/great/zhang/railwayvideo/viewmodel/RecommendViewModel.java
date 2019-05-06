@@ -38,10 +38,6 @@ public class RecommendViewModel extends AbsViewModel {
 
     }
 
-    @Override
-    protected void getError() {
-
-    }
 
 
 }

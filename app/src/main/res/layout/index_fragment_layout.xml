@@ -7,7 +7,7 @@
     <demo.great.zhang.railwayvideo.widget.HeaderLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="40dp"
         android:background="?android:attr/windowBackground"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -58,6 +58,7 @@
             </com.youth.banner.Banner>
 
             <TextView
+                android:id="@+id/tv_recomend"
                 android:textSize="16sp"
                 android:drawablePadding="4dp"
                 android:gravity="center"
@@ -72,7 +73,10 @@
                 android:text="推荐资源"
                 android:textColor="@color/black" />
 
+
+
             <androidx.recyclerview.widget.RecyclerView
+                app:fastScrollEnabled="false"
                 android:scrollbars="none"
                 android:id="@+id/rl_show_hot"
                 android:layout_width="match_parent"
@@ -96,6 +100,7 @@
                 android:textColor="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
+                app:fastScrollEnabled="false"
                 android:scrollbars="none"
                 android:id="@+id/rl_show_auto"
                 android:layout_width="match_parent"
@@ -117,12 +122,19 @@
                 android:text="最新资源"
                 android:textColor="@color/black" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <RelativeLayout
+                android:descendantFocusability="blocksDescendants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+            <androidx.recyclerview.widget.RecyclerView
+                app:fastScrollEnabled="false"
                 android:scrollbars="none"
                 android:id="@+id/rl_show_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            </RelativeLayout>
 
 
         </LinearLayout>

@@ -31,12 +31,14 @@ import demo.great.zhang.railwayvideo.Utils.ConnectionUtils;
 import demo.great.zhang.railwayvideo.Utils.MPermissionUtils;
 import demo.great.zhang.railwayvideo.Utils.WIFIUtils;
 import demo.great.zhang.railwayvideo.application.Consts;
+import demo.great.zhang.railwayvideo.application.RailWayVideoApplication;
 import demo.great.zhang.railwayvideo.base.BaseActivity;
 import demo.great.zhang.railwayvideo.base.BaseFragment;
 import demo.great.zhang.railwayvideo.fragment.FragmentIndex;
 import demo.great.zhang.railwayvideo.fragment.FragmentSearch;
 import demo.great.zhang.railwayvideo.fragment.FragmentSetting;
 import demo.great.zhang.railwayvideo.fragment.FragmentSubtype;
+import demo.great.zhang.railwayvideo.net.ConnectService;
 import hugo.weaving.DebugLog;
 
 public class MainActivity extends BaseActivity {
@@ -55,6 +57,7 @@ public class MainActivity extends BaseActivity {
     private int lastfragment;
 
     private WIFIUtils wifiUtils;
+    private connectBoardCasr mBroadcastReceiver;
 
     public BottomNavigationView getNavigation() {
         return navigation;
@@ -76,7 +79,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if(!validate) {
             System.out.println("onResume");
             MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -103,6 +105,11 @@ public class MainActivity extends BaseActivity {
     @DebugLog
     @Override
     protected void initEvent() {
+        mBroadcastReceiver = new connectBoardCasr();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("mainactivity.connect");
+        registerReceiver(mBroadcastReceiver, intentFilter);
+
         System.out.println("MainActivity:initEvent");
         MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION},
@@ -146,6 +153,8 @@ public class MainActivity extends BaseActivity {
         }
         boolean isConnect = wifiUtils.connectWifi(Consts.STATICSSID, Consts.STATICPWD);
         if (isConnect && wifiUtils.getSSID().equals("\""+Consts.STATICSSID+"\"") && ConnectionUtils.ping(this)) {
+            Intent intent = new Intent(this, ConnectService.class);
+            startService(intent);
             initFragment();
             dismissProgress();
         } else {
@@ -174,9 +183,7 @@ public class MainActivity extends BaseActivity {
         fragments = new BaseFragment[]{fragmentIndex, fragmentSubtype, fragmentSearch, fragmentSetting};
         lastfragment = 0;
         getSupportFragmentManager().beginTransaction().replace(R.id.mainview, fragmentIndex).show(fragmentIndex).commit();
-
         navigation.setOnNavigationItemSelectedListener(changeFragment);
-
     }
 
 
@@ -245,6 +252,22 @@ public class MainActivity extends BaseActivity {
             firstTime = secondTime;
         } else{
             finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBroadcastReceiver);
+    }
+
+    private class connectBoardCasr extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean con = intent.getBooleanExtra("connect",false);
+
+            RailWayVideoApplication.connect = con;
         }
     }
 }

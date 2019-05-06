@@ -13,14 +13,26 @@ import okhttp3.OkHttpClient;
 
 public class RailWayVideoApplication extends Application {
 
+    private static RailWayVideoApplication instance = null;
+
+    public static boolean connect = false;
+
+    public static RailWayVideoApplication getInstance(){
+        return instance;
+    }
+
+
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
 //        CrashHandler.getInstance().initCrashHandler(this);
         HttpInterceptor interceptor = new HttpInterceptor();
+        interceptor.setmContext(this);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                .writeTimeout(10000l,TimeUnit.MILLISECONDS)
                 .addNetworkInterceptor(interceptor)
                 .build();
         OkHttpUtils.initClient(okHttpClient);

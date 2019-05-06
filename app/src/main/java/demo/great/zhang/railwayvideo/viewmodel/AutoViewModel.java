@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-
-import androidx.annotation.MainThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import demo.great.zhang.railwayvideo.entity.ListObject;
@@ -47,8 +45,4 @@ public class AutoViewModel extends AbsViewModel {
         mutableLiveData.setValue(simpleMovieList);
     }
 
-    @Override
-    protected void getError() {
-
-    }
 }

@@ -37,8 +37,4 @@ public class SearchByTitleViewMode extends AbsViewModel {
         mutableLiveData.setValue(simpleMovieList);
     }
 
-    @Override
-    protected void getError() {
-
-    }
 }

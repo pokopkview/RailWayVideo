@@ -2,7 +2,7 @@ package demo.great.zhang.railwayvideo.net;
 
 public class URLConst {
     public static final String netURL = "http://2b3b707881.iok.la";
-    public static String staticURL = "http://192.168.2.111:8080";
+    public static String staticURL = "http://10.147.19.241:8080";
     public static String baseurl(){return staticURL;}
     public static String GETRECOMMEND(){return staticURL+"/recommend";}
     public static String GETRECENTLY(){return staticURL+"/recently";}
