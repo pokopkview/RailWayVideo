@@ -16,6 +16,8 @@ import okhttp3.Call;
 public abstract class AbsViewModel extends ViewModel {
 
     protected Map<String,String> value = new HashMap<>();
+    private static final int retry = 3;
+    private int count = 0;
 
     protected abstract void getCallBack(String response);
 
@@ -28,8 +30,12 @@ public abstract class AbsViewModel extends ViewModel {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        System.out.println("onError:"+e.getMessage());
-                        getError();
+                        if(count<retry) {
+                            count++;
+                            HttpGet(url, params);
+                        }else{
+                            getError();
+                        }
                     }
 
                     @Override

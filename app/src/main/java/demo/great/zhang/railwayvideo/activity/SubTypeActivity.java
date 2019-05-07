@@ -118,6 +118,4 @@ public class SubTypeActivity extends BaseActivity {
     public void back(View view){
         onBackPressed();
     }
-
-
 }

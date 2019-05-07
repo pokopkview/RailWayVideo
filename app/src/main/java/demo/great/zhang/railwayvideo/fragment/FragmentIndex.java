@@ -139,7 +139,7 @@ public class FragmentIndex extends BaseFragment {
 
     @Override
     protected void initNet() {
-        System.out.println("initNet" + ConnectionUtils.ping(getAppActivity()));
+
         if (RailWayVideoApplication.connect) {
             getAppActivity().dismissProgress();
             hotViewModel = ViewModelProviders.of(this).get(HotViewModel.class);

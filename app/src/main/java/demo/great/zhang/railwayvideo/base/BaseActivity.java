@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -143,6 +144,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgress.setMessage(msg);
+        mProgress.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+                    System.out.println("keyCode:"+keyCode);
+                    onBackPressed();
+                }
+                return false;
+            }
+        });
         //是否可以通过返回按钮退出对话框
         mProgress.setCancelable(cancel);
         mProgress.show();
@@ -185,5 +196,21 @@ public abstract class BaseActivity extends AppCompatActivity {
                 });
         // 显示
         normalDialog.show();
+    }
+    long firstTime = 0;
+    @Override
+    public void onBackPressed() {
+        long secondTime = System.currentTimeMillis();
+        if(this.getClass() == MainActivity.class) {
+            if (secondTime - firstTime > 2000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;
+            } else {
+                finish();
+                System.exit(0);
+            }
+        }else{
+            finish();
+        }
     }
 }

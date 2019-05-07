@@ -240,19 +240,12 @@ public class MainActivity extends BaseActivity {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
     }
-    long firstTime = 0;
     /**
      * 第三种方法
      */
     @Override
     public void onBackPressed() {
-        long secondTime = System.currentTimeMillis();
-        if (secondTime - firstTime > 2000) {
-            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            firstTime = secondTime;
-        } else{
-            finish();
-        }
+        super.onBackPressed();
     }
 
     @Override
