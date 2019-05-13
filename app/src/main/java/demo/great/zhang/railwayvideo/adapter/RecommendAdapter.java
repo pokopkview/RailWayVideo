@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -85,12 +86,13 @@ public class RecommendAdapter extends RecyclerView.Adapter {
 
         TextView tvTitle;
         ImageView ivPoster;
+//        Button bt_select;
 
         public reViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_title);
             ivPoster = itemView.findViewById(R.id.iv_poster);
-
+//            bt_select = itemView.findViewById(R.id.bt_click);
         }
     }
 }

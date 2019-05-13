@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("mainactivity.connect");
         registerReceiver(mBroadcastReceiver, intentFilter);
-
+        setNettest();
         System.out.println("MainActivity:initEvent");
         MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION},
@@ -133,6 +133,7 @@ public class MainActivity extends BaseActivity {
     }
     @DebugLog
     private void setNettest() {
+        System.out.println("setNettest");
         if(wifiUtils==null) {
             wifiUtils = new WIFIUtils(this);
         }
@@ -259,7 +260,6 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean con = intent.getBooleanExtra("connect",false);
-
             RailWayVideoApplication.connect = con;
         }
     }

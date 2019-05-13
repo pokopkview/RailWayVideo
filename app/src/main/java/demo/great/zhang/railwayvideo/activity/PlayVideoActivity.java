@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -24,15 +25,22 @@ import com.google.gson.Gson;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jzvd.JZDataSource;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import demo.great.zhang.railwayvideo.R;
+import demo.great.zhang.railwayvideo.Utils.JZAutoNextStd;
 import demo.great.zhang.railwayvideo.Utils.JZMediaIjkplayer;
 import demo.great.zhang.railwayvideo.Utils.OpenFileUtils;
 import demo.great.zhang.railwayvideo.Utils.URLChange;
@@ -43,6 +51,7 @@ import demo.great.zhang.railwayvideo.base.BaseActivity;
 import demo.great.zhang.railwayvideo.entity.DetailMovie;
 import demo.great.zhang.railwayvideo.entity.ListObject;
 import demo.great.zhang.railwayvideo.entity.SimpleMovie;
+import demo.great.zhang.railwayvideo.eventbus.Message;
 import demo.great.zhang.railwayvideo.net.URLConst;
 import demo.great.zhang.railwayvideo.viewmodel.GenresViewModel;
 import okhttp3.Call;
@@ -51,7 +60,7 @@ public class PlayVideoActivity extends BaseActivity {
 
 
     @BindView(R.id.jz_video)
-    JzvdStd jzVideo;
+    JZAutoNextStd jzVideo;
     @BindView(R.id.tv_title)
     TextView tvTitle;
     @BindView(R.id.tv_type)
@@ -94,6 +103,9 @@ public class PlayVideoActivity extends BaseActivity {
 
     private File download;
 
+    private List<String> esp;
+    EpisodesAdapter adapter;
+
 
     @Override
     protected int getLayout() {
@@ -102,50 +114,32 @@ public class PlayVideoActivity extends BaseActivity {
 
     @OnClick(R.id.bt_download)
     public void downloadClick(View view) {
-        File str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
 //        File str = new File(this.getFilesDir().getAbsolutePath());
         checkPermission();
-        if (detailMovie != null) {
-            String url = detailMovie.getResourse().get(0);
-            url = URLConst.baseurl() + url.split("8080")[1];
-            System.out.println(url);
-            String name = url.substring(url.lastIndexOf("/"));
-            showDownloadProgress();
-            OkHttpUtils.get()
-                    .url(url)
-                    .build()
-                    .execute(new FileCallBack(str.getAbsolutePath(), name) {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            showMsg("下载失败！");
-                            dismissPro();
-                        }
 
-                        @Override
-                        public void onResponse(File response, int id) {
-                            download = response;
-                            showMsg("下载成功！");
-                        }
+    }
 
-                        @Override
-                        public void inProgress(float progress, long total, int id) {
-                            progress = progress * 100;
-                            uploadProgress((int) progress);
-                        }
-                    });
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void getEspide(Message messageEvent) {
+        adapter.setSelectItem(messageEvent.message);
     }
 
     @Override
     protected void initEvent() {
+        EventBus.getDefault().register(this);
         int id = getIntent().getIntExtra("mainID", -1);
         subtype = getIntent().getStringExtra("subtype");
         params.clear();
         params.put("id", String.valueOf(id));
-        System.out.println("show");
         showProgress(true, "等待加载～");
         HttpGet(URLConst.GETDETAIL(), params, GETDETAIL);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void setViewByType() {
@@ -191,13 +185,12 @@ public class PlayVideoActivity extends BaseActivity {
                 btDownload.setVisibility(View.VISIBLE);
                 break;
             case "tv":
-
                 tvEpisodes.setVisibility(View.VISIBLE);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 tvEpisodes.setLayoutManager(linearLayoutManager);
                 System.out.println(detailMovie.toString());
-                EpisodesAdapter adapter = new EpisodesAdapter(this, detailMovie.getResourse());
+                adapter = new EpisodesAdapter(this, detailMovie.getResourse());
                 adapter.setSelectListener(new EpisodesAdapter.EpisodeListener() {
                     @Override
                     public void ItemSelect(int position) {
@@ -205,8 +198,11 @@ public class PlayVideoActivity extends BaseActivity {
                         String encode = detailMovie.getResourse().get(position);
                         System.out.println("encode:" + encode);
                         encode = URLConst.baseurl() + encode.split("://")[1].substring(encode.split("://")[1].indexOf("/"));
-                        jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
-                        jzVideo.startVideo();
+                        JZDataSource jzDataSource = new JZDataSource(URLChange.decodeURL(encode), detailMovie.getTitle());
+                        Object[] objects = new Object[]{position, esp};
+                        jzDataSource.objects = objects;
+                        jzVideo.changeUrl(jzDataSource, 0l);
+                        jzVideo.startButton.performClick();
                     }
                 });
                 tvEpisodes.setAdapter(adapter);
@@ -259,8 +255,21 @@ public class PlayVideoActivity extends BaseActivity {
 //                    jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
 //
 //                }
-                jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
-                jzVideo.startVideo();
+                JZDataSource jzDataSource = new JZDataSource(URLChange.decodeURL(encode), detailMovie.getTitle());
+                System.out.println(URLChange.decodeURL(encode));
+                if (subtype.equals("tv")) {
+                    esp = new ArrayList<>();
+                    for (int i = 0; i < detailMovie.getResourse().size(); i++) {
+                        String encodes = detailMovie.getResourse().get(i);
+                        encodes = URLConst.baseurl() + encodes.split("://")[1].substring(encodes.split("://")[1].indexOf("/"));
+                        esp.add(URLChange.decodeURL(encodes));
+                    }
+                    Object[] objects = new Object[]{0, esp};
+                    jzDataSource.objects = objects;
+                }
+                jzVideo.setUp(jzDataSource, Jzvd.SCREEN_WINDOW_NORMAL);
+                jzVideo.startButton.performClick();
+
                 setViewByType();
                 break;
             case SETWATCHED:
@@ -283,7 +292,36 @@ public class PlayVideoActivity extends BaseActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CODE);
 
         } else {
-//            Toast.makeText(this, "授权成功！", Toast.LENGTH_SHORT).show();
+            File str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            if (detailMovie != null) {
+                String url = detailMovie.getResourse().get(0);
+                url = URLConst.baseurl() + url.split("8080")[1];
+                System.out.println(url);
+                String name = url.substring(url.lastIndexOf("/"));
+                showDownloadProgress();
+                OkHttpUtils.get()
+                        .url(url)
+                        .build()
+                        .execute(new FileCallBack(str.getAbsolutePath(), name) {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+                                showMsg("下载失败！");
+                                dismissPro();
+                            }
+
+                            @Override
+                            public void onResponse(File response, int id) {
+                                download = response;
+                                showMsg("下载成功！");
+                            }
+
+                            @Override
+                            public void inProgress(float progress, long total, int id) {
+                                progress = progress * 100;
+                                uploadProgress((int) progress);
+                            }
+                        });
+            }
         }
     }
 
@@ -365,5 +403,53 @@ public class PlayVideoActivity extends BaseActivity {
     @OnClick(R.id.ic_back)
     public void onViewClicked() {
         onBackPressed();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case 101: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    File str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    if (detailMovie != null) {
+                        String url = detailMovie.getResourse().get(0);
+                        url = URLConst.baseurl() + url.split("8080")[1];
+                        System.out.println(url);
+                        String name = url.substring(url.lastIndexOf("/"));
+                        showDownloadProgress();
+                        OkHttpUtils.get()
+                                .url(url)
+                                .build()
+                                .execute(new FileCallBack(str.getAbsolutePath(), name) {
+                                    @Override
+                                    public void onError(Call call, Exception e, int id) {
+                                        showMsg("下载失败！");
+                                        dismissPro();
+                                    }
+
+                                    @Override
+                                    public void onResponse(File response, int id) {
+                                        download = response;
+                                        showMsg("下载成功！");
+                                    }
+
+                                    @Override
+                                    public void inProgress(float progress, long total, int id) {
+                                        progress = progress * 100;
+                                        uploadProgress((int) progress);
+                                    }
+                                });
+                    }
+
+                } else {
+                    Toast.makeText(this, "权限被限，文件将无法下载", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+
     }
 }

@@ -35,6 +35,11 @@ public class EpisodesAdapter extends RecyclerView.Adapter {
         return new EpisodeViewHolder(view);
     }
 
+    public void setSelectItem(int itemcount){
+        selectItem = itemcount;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((EpisodeViewHolder)holder).tvEpisode.setText((position+1)+"");

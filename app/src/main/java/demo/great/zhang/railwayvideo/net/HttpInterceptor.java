@@ -1,6 +1,8 @@
 package demo.great.zhang.railwayvideo.net;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Looper;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -13,10 +15,10 @@ import okhttp3.Response;
 
 public class HttpInterceptor implements Interceptor {
 
-    private Context mContext;
+    private static Context mContext;
 
-    public void setmContext(Context context){
-        this.mContext = context;
+    public static void setmContext(Context context){
+        mContext = context;
     }
 
     @Override
@@ -27,7 +29,12 @@ public class HttpInterceptor implements Interceptor {
         response = chain.proceed(uest);
         System.out.println("ResponseCode:"+response.code());
         if(response.code()!= HttpURLConnection.HTTP_OK){
-            Toast.makeText(RailWayVideoApplication.getInstance(),"网络错误",Toast.LENGTH_LONG).show();
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext,"网络错误",Toast.LENGTH_LONG).show();
+                }
+            });
         }
         return response;
     }

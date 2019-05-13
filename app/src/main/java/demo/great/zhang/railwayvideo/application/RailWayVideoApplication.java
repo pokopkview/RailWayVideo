@@ -28,7 +28,6 @@ public class RailWayVideoApplication extends Application {
         instance = this;
 //        CrashHandler.getInstance().initCrashHandler(this);
         HttpInterceptor interceptor = new HttpInterceptor();
-        interceptor.setmContext(this);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)

@@ -78,6 +78,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 app:fastScrollEnabled="false"
                 android:scrollbars="none"
+                android:focusable="true"
                 android:id="@+id/rl_show_hot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -102,6 +103,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 app:fastScrollEnabled="false"
                 android:scrollbars="none"
+                android:focusable="true"
                 android:id="@+id/rl_show_auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -130,6 +132,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 app:fastScrollEnabled="false"
                 android:scrollbars="none"
+                android:focusable="true"
                 android:id="@+id/rl_show_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
