@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class ConnectService extends IntentService {
             Intent net = new Intent();
             net.setAction("mainactivity.connect");
             net.putExtra("connect",connect);
-            sendBroadcast(net);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(net);
         }
 
 

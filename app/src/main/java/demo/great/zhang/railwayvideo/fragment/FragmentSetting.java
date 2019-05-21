@@ -10,15 +10,25 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.File;
-
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import demo.great.zhang.railwayvideo.R;
-import demo.great.zhang.railwayvideo.Utils.FileUtils;
 import demo.great.zhang.railwayvideo.Utils.OpenFileUtils;
+import demo.great.zhang.railwayvideo.Utils.SpacesCheck;
+import demo.great.zhang.railwayvideo.adapter.LocalFileAdapter;
 import demo.great.zhang.railwayvideo.base.BaseFragment;
+import demo.great.zhang.railwayvideo.entity.LocalFileEntity;
 
 public class FragmentSetting extends BaseFragment {
 
@@ -32,6 +42,10 @@ public class FragmentSetting extends BaseFragment {
     TextView tvDetaileLoca;
     @BindView(R.id.tv_open)
     TextView tvOpen;
+    @BindView(R.id.rl_local_file)
+    RecyclerView rlLocalFile;
+    @BindView(R.id.tv_showmsg)
+    TextView tvShowmsg;
 
     @Override
     protected Object getContentLayout() {
@@ -39,22 +53,52 @@ public class FragmentSetting extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("onResume");
+    }
+
+    @Override
     protected void initView(View contentView) {
-        String location = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-        tvDetaileLoca.setText(location);
+        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File dFile = new File(file.getAbsolutePath() + "/RDownload");
+        if (!dFile.exists() && dFile.listFiles().length<1) {
+            tvShowmsg.setText("无下载文件");
+            return;
+        }
+        LocalFileEntity entity;
+        List<LocalFileEntity> list = new ArrayList<>();
+        for(File files : dFile.listFiles()){
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .format(new Date(files.lastModified()));
+            entity = new LocalFileEntity(files.getName(), SpacesCheck.getAutoFileOrFilesSize(files.getAbsolutePath()),time,files.getAbsolutePath());
+            list.add(entity);
+        }
+        rlLocalFile.setLayoutManager(new LinearLayoutManager(getAppActivity()));
+        LocalFileAdapter adapter = new LocalFileAdapter(getAppActivity(),list);
+        rlLocalFile.addItemDecoration(new DividerItemDecoration(getAppActivity(),DividerItemDecoration.VERTICAL));
+        adapter.setListener(new LocalFileAdapter.fileClickListener() {
+            @Override
+            public void onClickItem(int position) {
+                OpenFileUtils.openFile(getAppActivity(),dFile.listFiles()[position]);
+            }
+        });
+        rlLocalFile.setAdapter(adapter);
     }
 
     @OnClick(R.id.tv_open)
-    public void openFile(View view){
+    public void openFile(View view) {
         File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        System.out.println(file.getAbsoluteFile());
+        File dFile = new File(file.getAbsolutePath() + "/RDownload");
+//        File file = Environment.getExternalStorageDirectory();
+        System.out.println(dFile.getAbsoluteFile());
         Uri uri = null;
 
-//        if (Build.VERSION.SDK_INT >= 24) {
-//            uri = FileProvider.getUriForFile(getAppActivity(), "demo.great.zhang.railwayvideo.android7.fileprovider", file);
-//        } else {
-            uri = Uri.fromFile(file);
-//        }
+        if (Build.VERSION.SDK_INT >= 24) {
+            uri = FileProvider.getUriForFile(getAppActivity(), "demo.great.zhang.railwayvideo.android7.fileprovider", dFile);
+        } else {
+            uri = Uri.fromFile(dFile);
+        }
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

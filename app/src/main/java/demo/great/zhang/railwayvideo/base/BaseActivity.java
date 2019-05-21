@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import demo.great.zhang.railwayvideo.MainActivity;
 import demo.great.zhang.railwayvideo.R;
 import demo.great.zhang.railwayvideo.Utils.Density;
+import demo.great.zhang.railwayvideo.Utils.StatusBarUtils;
 import demo.great.zhang.railwayvideo.net.HttpInterceptor;
 import hugo.weaving.DebugLog;
 import okhttp3.Call;

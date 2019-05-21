@@ -16,7 +16,7 @@
 
             <ImageView
                 android:id="@+id/iv_subtype_icon"
-                android:src="@mipmap/setting"
+                android:src="@mipmap/local_file"
                 android:layout_width="25dp"
                 android:layout_height="25dp" />
 
@@ -28,7 +28,7 @@
                 android:layout_toRightOf="@id/iv_subtype_icon"
                 android:textStyle="bold"
                 android:textColor="@color/nagative_blue"
-                android:text="@string/setting"
+                android:text="本地文件"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -42,6 +42,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -66,7 +67,6 @@
 
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/tv_open"
             android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
@@ -78,8 +78,27 @@
             android:layout_height="wrap_content" />
 
 
-
     </RelativeLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="30dp">
+        <TextView
+            android:id="@+id/tv_showmsg"
+            android:text="已下载文件"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rl_local_file"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+
 
 
 

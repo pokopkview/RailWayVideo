@@ -4,29 +4,51 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <RelativeLayout
+        android:background="@color/nagative_blue"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
-        <EditText
-            android:id="@+id/et_input"
-            android:layout_marginRight="90dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:layout_height="45dp">
+
+        <LinearLayout
             android:layout_centerVertical="true"
+            android:background="@color/white"
+            android:layout_marginRight="85dp"
             android:layout_marginLeft="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="28dp">
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <EditText
+            android:background="@color/white"
+            android:id="@+id/et_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:maxLines="1"
+            android:singleLine="true"
             android:imeOptions="actionSearch"
             android:drawableLeft="@mipmap/search_small"
-            android:textCursorDrawable="@color/nagative_blue"
+            android:textCursorDrawable="@null"
             android:theme="@style/MyEditText" />
+        </RelativeLayout>
 
-        <ImageView
-            android:visibility="invisible"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/bt_search_confrim"
-            android:src="@mipmap/clear"
-            android:id="@+id/iv_clear"
-            android:layout_centerInParent="true"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
+
+            <ImageView
+                android:visibility="invisible"
+                android:layout_alignParentEnd="true"
+                android:src="@mipmap/clear"
+                android:id="@+id/iv_clear"
+                android:layout_marginRight="3dp"
+                android:layout_width="15dp"
+                android:layout_height="28dp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/bt_search_confrim"
@@ -42,6 +64,7 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:scrollbars="none"
         android:id="@+id/rl_search"

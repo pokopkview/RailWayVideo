@@ -24,6 +24,8 @@ import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -53,6 +55,7 @@ public class MainActivity extends BaseActivity {
     private FragmentSetting fragmentSetting;
     private BaseFragment[] fragments;
     private boolean validate = false;
+    private LocalBroadcastManager localBroadcastManager;
 
     private int lastfragment;
 
@@ -108,7 +111,8 @@ public class MainActivity extends BaseActivity {
         mBroadcastReceiver = new connectBoardCasr();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("mainactivity.connect");
-        registerReceiver(mBroadcastReceiver, intentFilter);
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.registerReceiver(mBroadcastReceiver, intentFilter);
         setNettest();
         System.out.println("MainActivity:initEvent");
         MPermissionUtils.requestPermissionsResult(this, 1, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -252,7 +256,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiver);
+        localBroadcastManager.unregisterReceiver(mBroadcastReceiver);
     }
 
     private class connectBoardCasr extends BroadcastReceiver{

@@ -90,7 +90,6 @@ public class SubTypeActivity extends BaseActivity {
         rvSimpleMovie.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                System.out.println("onScrolled");
                 if(!rvSimpleMovie.canScrollVertically(1)){
                     //到底部
                     if(canGetMore && !getingDate) {

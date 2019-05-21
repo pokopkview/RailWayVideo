@@ -14,6 +14,7 @@
     <string name="subtype">类别</string>
     <string name="search">搜索</string>
     <string name="setting">设定</string>
+    <string name="local">本地</string>
     <string name="server_ip">http://192.168.1.100:8080</string>
     <string name="wifi_name">ASUS</string>
     <string name="wifi_pwd">147258369</string>

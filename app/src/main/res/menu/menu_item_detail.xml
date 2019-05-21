@@ -17,8 +17,8 @@
         android:title="@string/search" />
     <item
         android:id="@+id/navigation_setting"
-        android:icon="@drawable/setting_select"
-        android:title="@string/setting" />
+        android:icon="@drawable/select_localf"
+        android:title="@string/local" />
 
 
 </menu>

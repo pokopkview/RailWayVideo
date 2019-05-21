@@ -114,8 +114,6 @@ public class PlayVideoActivity extends BaseActivity {
 
     @OnClick(R.id.bt_download)
     public void downloadClick(View view) {
-
-//        File str = new File(this.getFilesDir().getAbsolutePath());
         checkPermission();
 
     }
@@ -248,13 +246,6 @@ public class PlayVideoActivity extends BaseActivity {
                 params.put("id", String.valueOf(detailMovie.getMainID()));
                 HttpGet(URLConst.SETWATCHED(), params, SETWATCHED);//提交已观看
                 JzvdStd.setMediaInterface(new JZMediaIjkplayer());
-//                if(encode.endsWith("mkv")) {
-//                    JzvdStd.setMediaInterface(new JZMediaIjkplayer());
-//                    jzVideo.setUp(encode, detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
-//                }else{
-//                    jzVideo.setUp(URLChange.decodeURL(encode), detailMovie.getTitle(), Jzvd.SCREEN_WINDOW_NORMAL);
-//
-//                }
                 JZDataSource jzDataSource = new JZDataSource(URLChange.decodeURL(encode), detailMovie.getTitle());
                 System.out.println(URLChange.decodeURL(encode));
                 if (subtype.equals("tv")) {
@@ -293,6 +284,10 @@ public class PlayVideoActivity extends BaseActivity {
 
         } else {
             File str = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File dFile = new File(str.getAbsolutePath()+"/RDownload");
+            if(!dFile.exists()){
+                dFile.mkdirs();
+            }
             if (detailMovie != null) {
                 String url = detailMovie.getResourse().get(0);
                 url = URLConst.baseurl() + url.split("8080")[1];
@@ -302,7 +297,7 @@ public class PlayVideoActivity extends BaseActivity {
                 OkHttpUtils.get()
                         .url(url)
                         .build()
-                        .execute(new FileCallBack(str.getAbsolutePath(), name) {
+                        .execute(new FileCallBack(dFile.getAbsolutePath(), name) {
                             @Override
                             public void onError(Call call, Exception e, int id) {
                                 showMsg("下载失败！");
@@ -443,13 +438,10 @@ public class PlayVideoActivity extends BaseActivity {
                                     }
                                 });
                     }
-
                 } else {
                     Toast.makeText(this, "权限被限，文件将无法下载", Toast.LENGTH_SHORT).show();
                 }
-
             }
         }
-
     }
 }

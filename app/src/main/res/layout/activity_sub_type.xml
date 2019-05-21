@@ -11,7 +11,7 @@
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
-        android:layout_height="54dp">
+        android:layout_height="45dp">
 
         <ImageView
             android:id="@+id/ic_back"

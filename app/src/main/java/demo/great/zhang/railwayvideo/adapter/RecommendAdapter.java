@@ -44,6 +44,7 @@ public class RecommendAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         System.out.println("position:"+position);
         ((reViewHolder)holder).tvTitle.setText(data.get(position).getTitle());
+        ((reViewHolder) holder).tvTitle.setSelected(true);
         Object img;
         if(data.get(position).getImage().equals("custom_image.png")) {
             if (data.get(position).getSubtype().equals("file")) {
